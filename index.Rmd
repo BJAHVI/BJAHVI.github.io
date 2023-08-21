@@ -6,6 +6,7 @@ title: "Welcome to my website!"
 
 #Slapstickhumor
 
-
+<details>
 #asdqwrdfcsaz
+</details>
 You're up and running!
