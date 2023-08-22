@@ -8,11 +8,20 @@ navbar:
       icon: fa-home
       href: index.html
     - text: "About"
-      icon: fa-user 
+      icon: fa-image 
       href: about.html
     - text: "Day 2"
-      icon: fa-user 
+      icon: fa-pen-to-square 
       href: Day-2.html
+    - text: "Day 3"
+      icon: fa-pen-to-square 
+      href: Day-3.html
+    - text: "Day 4"
+      icon: fa-pen-to-square 
+      href: Day-4.html
+    - text: "Day 5"
+      icon: fa-pen-to-square 
+      href: Day-5.html
     - text: "CV"
       icon: fa-file-pdf-o
       href: cv.html
@@ -22,7 +31,7 @@ navbar:
   right:
     - text: "Contact me"
       icon: fa-envelope-o
-      href: mailto:YOUREMAIL                    # CHANGE HERE 
+      href: mailto:PleaseNo                   # CHANGE HERE 
     - text: "GitHub"
       icon: fa-github
       href: https://github.com/BJAHVI       # CHANGE HERE 
