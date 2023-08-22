@@ -85,7 +85,7 @@ df %>% ggplot(aes(gdpPercap,
 
 ```
 
-## Exercises pt 2
+## Exercises pt. 2
 
 ```{r}
 
