@@ -312,6 +312,17 @@ $(document).ready(function () {
 
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#nonsense" id="toc-nonsense">Nonsense</a>
+<ul>
+<li><a href="#exercises-pt.-1" id="toc-exercises-pt.-1">Exercises
+pt. 1</a></li>
+<li><a href="#exercises-pt-2" id="toc-exercises-pt-2">Exercises pt
+2</a></li>
+</ul></li>
+</ul>
+</div>
 
 <p>#Day 2</p>
 <pre><code>## ── Attaching core tidyverse packages ── tidyverse 2.0.0 ──
@@ -324,13 +335,12 @@ $(document).ready(function () {
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-#Random
+<div id="nonsense" class="section level1">
+<h1>Nonsense</h1>
 <details>
 <summary>
 It’s hidden
 </summary>
-<div id="ggplot2" class="section level2">
-<h2>GGplot2</h2>
 <pre class="r"><code>mtcars %&gt;% ggplot(aes(cyl, hp)) + geom_point() + geom_smooth(method = &quot;lm&quot;) + theme_bw()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="Day-2_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
@@ -339,9 +349,8 @@ It’s hidden
 <pre class="r"><code>diamonds %&gt;% ggplot(aes(price, cut, color = color)) + geom_point()</code></pre>
 <img src="Day-2_files/figure-html/unnamed-chunk-2-3.png" width="672" />
 </details>
-</div>
-<div id="exercise-1" class="section level2">
-<h2>Exercise 1</h2>
+<div id="exercises-pt.-1" class="section level2">
+<h2>Exercises pt. 1</h2>
 <pre class="r"><code>#Original code and output
 
 ggplot(iris, aes(Petal.Length, Petal.Width)) +
@@ -380,6 +389,49 @@ df %&gt;% ggplot(aes(gdpPercap,
        color = &quot;Continent&quot;, size = &quot;Population\n (millions)&quot;) +
   scale_x_log10()</code></pre>
 <p><img src="Day-2_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="exercises-pt-2" class="section level2">
+<h2>Exercises pt 2</h2>
+<pre class="r"><code>#1 How can you tell if an object is a tibble?
+is_tibble(iris)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.data.frame(iris)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>#2 If you have the name of a variable stored in an object e.g. var &lt;- &quot;mpg&quot;
+# How can you extract the reference variable from a tibble?
+
+var &lt;- mpg
+names(var)</code></pre>
+<pre><code>##  [1] &quot;manufacturer&quot; &quot;model&quot;        &quot;displ&quot;        &quot;year&quot;         &quot;cyl&quot;         
+##  [6] &quot;trans&quot;        &quot;drv&quot;          &quot;cty&quot;          &quot;hwy&quot;          &quot;fl&quot;          
+## [11] &quot;class&quot;</code></pre>
+<pre class="r"><code>head(var$manufacturer) # use any of the above $names the print</code></pre>
+<pre><code>## [1] &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; &quot;audi&quot;</code></pre>
+<pre class="r"><code># var[[&quot;manufacturer&quot;]] # does the same
+# var[[1]]  more of the same
+
+#3 What does tibble::enframe() do? when might you use it?
+
+
+# It converts a vector to a tibble
+
+short_vector &lt;- c(&quot;one&quot;, &quot;two&quot;, &quot;three&quot;, &quot;four&quot;)
+short_vector</code></pre>
+<pre><code>## [1] &quot;one&quot;   &quot;two&quot;   &quot;three&quot; &quot;four&quot;</code></pre>
+<pre class="r"><code>is_vector(short_vector)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>small_tibble &lt;- short_vector %&gt;% enframe()
+small_tibble</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##    name value
+##   &lt;int&gt; &lt;chr&gt;
+## 1     1 one  
+## 2     2 two  
+## 3     3 three
+## 4     4 four</code></pre>
+<pre class="r"><code>is_tibble(small_tibble)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
 </div>
 
 

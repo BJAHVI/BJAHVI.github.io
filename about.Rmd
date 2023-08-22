@@ -2,8 +2,9 @@
 title: "About me"
 ---
 
-## Header
 
-Say more about you here.
 
+### This plot is made in R
+<br>
+![Plot](images/map1.jpeg)
 

@@ -2,7 +2,10 @@
 title: "Day 2"
 author: "BHV"
 date: "2023-08-22"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
 
 ---
 
@@ -18,12 +21,10 @@ library(tidyverse)
 
 ```
 
-#Random 
+# Nonsense 
 <details>
 <summary> It's hidden </summary>
 
-
-## GGplot2
 ```{r}
 
 mtcars %>% ggplot(aes(cyl, hp)) + geom_point() + geom_smooth(method = "lm") + theme_bw()
@@ -35,7 +36,7 @@ diamonds %>% ggplot(aes(price, cut, color = color)) + geom_point()
 ```
 </details>
 
-## Exercise 1
+## Exercises pt. 1
 ```{r}
 #Original code and output
 
@@ -84,5 +85,45 @@ df %>% ggplot(aes(gdpPercap,
 
 ```
 
+## Exercises pt 2
+
+```{r}
+
+#1 How can you tell if an object is a tibble?
+is_tibble(iris)
+is.data.frame(iris)
+
+#2 If you have the name of a variable stored in an object e.g. var <- "mpg"
+# How can you extract the reference variable from a tibble?
+
+var <- mpg
+names(var)
+head(var$manufacturer) # use any of the above $names the print
+
+# var[["manufacturer"]] # does the same
+# var[[1]]  more of the same
+
+#3 What does tibble::enframe() do? when might you use it?
+
+
+# It converts a vector to a tibble
+
+short_vector <- c("one", "two", "three", "four")
+short_vector
+is_vector(short_vector)
+
+small_tibble <- short_vector %>% enframe()
+small_tibble
+is_tibble(small_tibble)
+
+
+#Clean-up
+rm(var,
+   short_vector,
+   small_tibble,
+   df,
+   p1)
+
+```
 
 
