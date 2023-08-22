@@ -63,7 +63,7 @@ p1 + facet_wrap(~cut(Petal.Width, breaks = c(0.5,1,1.5,2)), scales = "free_y")
 
 
 ```
-### Leaving Iris
+# Leaving Iris
 
 ```{r}
 df <- dplyr::filter(gapminder::gapminder, year == 1992)
@@ -125,5 +125,225 @@ rm(var,
    p1)
 
 ```
+## Exercises pt. 3
+Forked from r4ds
 
+### 1. 
+Why are pivot_longer() and pivot_wider() not perfectly symmetrical?
+Carefully consider the following example:
+
+```{r}
+stocks <- tibble(
+  year   = c(2015, 2015, 2016, 2016),
+  half  = c(   1,    2,     1,    2),
+  return = c(1.88, 0.59, 0.92, 0.17)
+)
+stocks
+stocks %>% 
+  pivot_wider(names_from = year, values_from = return) %>%
+  pivot_longer(`2015`:`2016`, names_to = "year", values_to = "return")
+# Year get's turned into a name when you pivot wider, so when you pivot longer it's using a name which will be character.
+
+#(Hint: look at the variable types and think about column names.)
+
+# pivot_longer() has a names_ptypes argument, e.g.  names_ptypes = list(year = double()). What does it do?
+
+
+# It throws an error if the data type doesn't match what you're expecting
+
+# stocks %>% 
+#   pivot_wider(names_from = year, values_from = return) %>%
+#   pivot_longer(`2015`:`2016`,
+#                names_to = "year",
+#                values_to = "return",
+#                names_ptypes = list(year = double())
+#                )
+
+
+
+
+```
+### 2. Why does this code fail?
+
+
+```{r}
+
+# table4a %>% 
+#   pivot_longer(c(1999, 2000), names_to = "year", values_to = "cases")
+
+#Because it's using tidy select, the "cols" argument c(1999, 2000) is loooking for column number 1999 and 2000 and there are only 3. you can either correct the numbers, or specify it's the column name with ""
+
+#These do the same
+table4a %>% 
+  pivot_longer(c(2, 3), names_to = "year", values_to = "cases")
+
+table4a %>% 
+  pivot_longer(c("1999", "2000"), names_to = "year", values_to = "cases")
+
+```
+
+### 3. What would happen if you widen this table? Why? How could you add a new column to uniquely identify each value?
+What would happen if you widen this table? Why? How could you add a new column to uniquely identify each value?
+
+```{r}
+people <- tribble(
+  ~name,             ~names,  ~values,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+#It's a problem that Philip Woods appears with two different ages.
+#There's a number of solutions depending on the reason for the above problem.
+
+
+```
+
+Tidy the simple tibble below. Do you need to make it wider or longer? What are the variables?
+
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+#This way each column holds one type of information.
+preg %>% pivot_longer(c("male", "female"), names_to = "Sex", values_to = "Count")
+
+#
+
+
+```
+# NYC flights
+
+```{r echo = FALSE}
+library(nycflights13)
+
+# Filter
+
+#Since positive numbers here 2 is always true this means is month == 1 true or is "TRUE TRUE" the first part of the filter arguement always returns true and thus doesn't filter any information.
+flights %>% filter(month == 1 | 2, dep_delay > 120)
+
+
+# arrange
+
+flights %>% arrange(desc(dep_delay))
+
+#distinct
+
+flights %>% distinct(month, origin, dest)
+
+# count
+flights %>% filter(day == 1, month == 1) %>% count(origin, dest)
+
+
+
+```
+## Exercises pt. 4
+
+1.In a single pipeline for each condition, find all flights that meet the condition:
+–Had an arrival delay of two or more hours
+– Flew to Houston (IAH or HOU)
+–Were operated by United, American, or Delta
+–Departed in summer (July, August, and September)
+–Arrived more than two hours late, but didn’t leave late
+–Were delayed by at least an hour, but made up over 30 minutes in flight
+–Sort flights to find the flights with longest departure delays. Find the flights that left earliest in the morning.
+
+
+### 1. 
+```{r}
+airlines
+names(flights)
+# whoops
+# flights %>% filter(arr_delay > 120 & 
+#                    dest == "IAH" | dest == "HOU" &
+#                    carrier  %in% c("United","American","Delta") &
+#                    month %in% c(7,8,9) &
+#                    dep_delay <= 0 &
+#                    
+#                    )
+                    
+# –Had an arrival delay of two or more hours
+flights %>% filter(arr_delay > 120)
+
+# – Flew to Houston (IAH or HOU)
+flights %>% filter(dest == "IAH" | dest == "HOU")
+
+# –Were operated by United, American, or Delta
+#Getting the abbr. for airline carriers
+flights %>% distinct(carrier)
+flights %>% filter(carrier %in% c("UA", "AA", "DL"))
+
+# –Departed in summer (July, August, and September)
+flights %>% filter(month %in% 7:9)
+
+# –Arrived more than two hours late, but didn’t leave late
+flights %>% filter(arr_delay > 120 & dep_delay <= 0)
+
+# –Were delayed by at least an hour, but made up over 30 minutes in flight
+flights %>% filter(dep_delay >= 60 & ((dep_delay-arr_delay) > 30))
+
+# –Sort flights to find the flights with longest departure delays. 
+flights %>% arrange(desc(dep_delay))
+
+# Find the flights that left earliest in the morning.
+flights %>% arrange(dep_time)
+
+
+```
+
+### 2.
+Sort flights to find the fastest flights. (Hint: Try including a math calculation inside of your function.)
+
+```{r}
+names(flights
+      )
+
+flights %>% arrange(desc(distance/air_time)) %>%
+  select(distance, air_time) %>% 
+  #Fluff
+  mutate(speed_mph = distance / air_time * 60)
+
+```
+
+### 3.
+Was there a flight on every day of 2013?
+```{r}
+# removing cancelled flights, and checking distinct days and month combinations still appearing.
+
+flights %>% filter(!is.na(dep_time)) %>% distinct(month, day)
+
+#Yes there are 365 distinct combinations.
+
+```
+
+###4.
+Which flights traveled the farthest distance? Which traveled the least distance?
+```{r}
+
+#Unique origin/destination combination == max distance
+flights %>% filter(distance == max(flights$distance)) %>% distinct(origin, dest, .keep_all = TRUE)
+
+#same but for min
+flights %>% filter(distance == min(flights$distance)) %>% distinct(origin, dest, .keep_all = TRUE)
+# It's the only flight
+flights %>% filter(origin == "EWR" & dest == "LGA")
+# They're very close (obviously)
+airports %>% filter(faa == "LGA" | faa == "EWR")
+
+```
+
+
+###5.
+Does it matter what order you used filter() and arrange() if you’re using both? Why/why not? Think about the results and how much work the functions would have to do.
+```{r}
+#If you filter first you reduced the data size of the data first, and then arrange it.
+
+#If you arrange first and then filter, you're working on the full data set for both operations
+
+
+```
 
