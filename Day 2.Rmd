@@ -1,0 +1,88 @@
+---
+title: "Day 2"
+author: "BHV"
+date: "2023-08-22"
+output: html_document
+
+---
+
+#Day 2 
+
+
+
+```{r echo = FALSE}
+#Loading 
+library(tidyverse)
+
+
+
+```
+
+#Random 
+<details>
+<summary> It's hidden </summary>
+
+
+## GGplot2
+```{r}
+
+mtcars %>% ggplot(aes(cyl, hp)) + geom_point() + geom_smooth(method = "lm") + theme_bw()
+
+diamonds %>% ggplot(aes(carat, color, color = price)) + geom_point() + facet_wrap(~color, scales = "free_y")
+
+diamonds %>% ggplot(aes(price, cut, color = color)) + geom_point()
+
+```
+</details>
+
+## Exercise 1
+```{r}
+#Original code and output
+
+ggplot(iris, aes(Petal.Length, Petal.Width)) +
+geom_point(size = 3)
+
+
+#Updated code and output
+
+p1 <- ggplot(iris, aes(Petal.Length, Petal.Width, color = Species, shape = Species)) +
+geom_point(size = 3) + theme_bw(base_size = 18) + labs(title = "to obtain this plot")
+
+p1
+#Now with facets and free axes
+
+p1 + facet_grid( . ~ Species, scales = "free_x") + labs(subtitle = "x-axis varies")
+
+
+#faceted by continous variable but applied to intervals.
+#using the "cut" function
+
+p1 + facet_wrap(~cut(Petal.Width, breaks = c(0.5,1,1.5,2)), scales = "free_y") 
+
+
+
+```
+### Leaving Iris
+
+```{r}
+df <- dplyr::filter(gapminder::gapminder, year == 1992)
+
+df %>% ggplot(aes(gdpPercap,
+                  lifeExp,
+                  size = pop/1000000, #Changes the number
+                  color = continent
+                  )
+              ) +
+  geom_point()+
+  theme_bw(base_size = 16) +
+  labs(title = "Gapminder for 1992",
+       x = "Gross Domestic Product (log scales)",
+       y = "Life expectancy at birth (years)",
+       color = "Continent", size = "Population\n (millions)") +
+  scale_x_log10()
+
+
+```
+
+
+

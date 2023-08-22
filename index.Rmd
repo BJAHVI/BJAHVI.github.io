@@ -2,6 +2,11 @@
 title: "Welcome to my website!"
 ---
 
+
+### This plot is made in R
+
+![All Danish sign-ups](images/map1.jpeg)
+
 #whooptidoo
 
 #Slapstickhumor

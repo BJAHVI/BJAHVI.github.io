@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="BHV" />
 
+<meta name="date" content="2023-08-22" />
 
-<title>Welcome to my website!</title>
+<title>Day 2</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -304,22 +306,80 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Welcome to my website!</h1>
+<h1 class="title toc-ignore">Day 2</h1>
+<h4 class="author">BHV</h4>
+<h4 class="date">2023-08-22</h4>
 
 </div>
 
 
-<div id="this-plot-is-made-in-r" class="section level3">
-<h3>This plot is made in R</h3>
-<div class="float">
-<img src="images/map1.jpeg" alt="All Danish sign-ups" />
-<div class="figcaption">All Danish sign-ups</div>
-</div>
-<p>#whooptidoo</p>
-<p>#Slapstickhumor</p>
+<p>#Day 2</p>
+<pre><code>## ── Attaching core tidyverse packages ── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ──────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+#Random
 <details>
-#asdqwrdfcsaz
+<summary>
+It’s hidden
+</summary>
+<div id="ggplot2" class="section level2">
+<h2>GGplot2</h2>
+<pre class="r"><code>mtcars %&gt;% ggplot(aes(cyl, hp)) + geom_point() + geom_smooth(method = &quot;lm&quot;) + theme_bw()</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="Day-2_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>diamonds %&gt;% ggplot(aes(carat, color, color = price)) + geom_point() + facet_wrap(~color, scales = &quot;free_y&quot;)</code></pre>
+<p><img src="Day-2_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<pre class="r"><code>diamonds %&gt;% ggplot(aes(price, cut, color = color)) + geom_point()</code></pre>
+<img src="Day-2_files/figure-html/unnamed-chunk-2-3.png" width="672" />
 </details>
+</div>
+<div id="exercise-1" class="section level2">
+<h2>Exercise 1</h2>
+<pre class="r"><code>#Original code and output
+
+ggplot(iris, aes(Petal.Length, Petal.Width)) +
+geom_point(size = 3)</code></pre>
+<p><img src="Day-2_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>#Updated code and output
+
+p1 &lt;- ggplot(iris, aes(Petal.Length, Petal.Width, color = Species, shape = Species)) +
+geom_point(size = 3) + theme_bw(base_size = 18) + labs(title = &quot;to obtain this plot&quot;)
+
+p1</code></pre>
+<p><img src="Day-2_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<pre class="r"><code>#Now with facets and free axes
+
+p1 + facet_grid( . ~ Species, scales = &quot;free_x&quot;) + labs(subtitle = &quot;x-axis varies&quot;)</code></pre>
+<p><img src="Day-2_files/figure-html/unnamed-chunk-3-3.png" width="672" /></p>
+<pre class="r"><code>#faceted by continous variable but applied to intervals.
+#using the &quot;cut&quot; function
+
+p1 + facet_wrap(~cut(Petal.Width, breaks = c(0.5,1,1.5,2)), scales = &quot;free_y&quot;) </code></pre>
+<p><img src="Day-2_files/figure-html/unnamed-chunk-3-4.png" width="672" />
+### Leaving Iris</p>
+<pre class="r"><code>df &lt;- dplyr::filter(gapminder::gapminder, year == 1992)
+
+df %&gt;% ggplot(aes(gdpPercap,
+                  lifeExp,
+                  size = pop/1000000, #Changes the number
+                  color = continent
+                  )
+              ) +
+  geom_point()+
+  theme_bw(base_size = 16) +
+  labs(title = &quot;Gapminder for 1992&quot;,
+       x = &quot;Gross Domestic Product (log scales)&quot;,
+       y = &quot;Life expectancy at birth (years)&quot;,
+       color = &quot;Continent&quot;, size = &quot;Population\n (millions)&quot;) +
+  scale_x_log10()</code></pre>
+<p><img src="Day-2_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 
 
