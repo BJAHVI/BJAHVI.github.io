@@ -4,4 +4,108 @@ author: "BHV"
 date: "2023-08-23"
 output: html_document
 ---
-# It's only day 2 :)
+
+## Exercises pt. 1
+###1.Which carrier has the worst average delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not?
+```{r}
+require(nycflights13)
+
+flights %>% group_by(carrier) %>% 
+  summarize(avg_del_carrier = mean(arr_delay, na.rm = TRUE)) %>%
+  arrange(desc(avg_del_carrier)) %>% 
+  left_join(airlines) %>%
+  select(avg_del_carrier,name,carrier)
+
+
+# # second part
+# 
+# df1 <- flights %>% group_by(origin,dest,carrier) %>% 
+#   summarize(avg_arr_delay_pr_carrier_pr_route = mean(arr_delay, na.rm = TRUE)) %>% arrange(carrier)
+# 
+# df2 <- flights %>% group_by(origin,dest)
+# 
+# %>% 
+#   ungroup() %>% 
+#   group_by(carrier) %>% 
+#   summarize(avg_arr_delay_pr_carrier = sum(avg_arr_delay_pr_carrier_pr_route)) %>% arrange(desc(avg_arr_delay_pr_carrier))
+
+
+```
+
+###2.Find the flights that are most delayed upon departure from each destination.
+```{r}
+flights %>% group_by(origin) %>% slice_max(order_by = dep_delay) %>% select(origin, dep_delay, arr_delay)
+
+
+```
+
+
+###3.How do delays vary over the course of the day. Illustrate your answer with a plot.
+
+```{r}
+#Doesnt work
+# flights %>% ggplot(aes(sched_dep_time,mean(!is.na(dep_delay)))) + geom_col(position = "dodge")
+
+flights %>% group_by(cut(sched_dep_time,c(0,
+                                          100,
+                                          200,
+                                          300, 
+                                          400,
+                                          500,
+                                          600,
+                                          700,
+                                          800,
+                                          900,
+                                          1000,
+                                          1100,
+                                          1200,
+                                          1300,
+                                          1400,
+                                          1500,
+                                          1600,
+                                          1700,
+                                          1800,
+                                          1900,
+                                          2000,
+                                          2100,
+                                          2200,
+                                          2300))
+                     ) %>% summarise(avg_delay = mean(dep_delay, na.rm=TRUE,),
+                                     number_of_flights = n()
+                     ) %>% 
+  ggplot(.,aes(.[[1]],avg_delay, fill = avg_delay)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 45))
+
+
+flights %>% group_by(hour) %>% summarize(avg_delay = mean(dep_delay, na.rm = TRUE)) %>% 
+  ggplot(aes(hour,avg_delay)) + 
+  geom_col() +
+  labs(title = "Avg. delay in minutes at each hour during the day",
+       y = "Average delay in minutes") +
+  theme_bw(base_size = 14)
+
+
+flights %>% group_by(hour) %>% summarize(n_flights = n())
+flights %>% group_by(hour) %>% summarize(avg_delay = mean(dep_delay, na.rm = TRUE),
+                                         n_flights = n()) %>% 
+  ggplot(aes(hour,avg_delay/n_flights)) + 
+  geom_col() +
+  labs(title = "Avg. delay in minutes per flight at each hour during the day",
+       y = "Average delay per flight in minutes") + 
+  theme_bw(base_size = 14)
+
+
+```
+
+
+###4.What happens if you supply a negative n to slice_min() and friends?
+
+
+```{r}
+
+#removes the last n observations
+
+```
+## Exercises pt. 2
+### 

@@ -295,8 +295,7 @@ flights %>% arrange(dep_time)
 
 ```
 
-### 2.
-Sort flights to find the fastest flights. (Hint: Try including a math calculation inside of your function.)
+### 2.Sort flights to find the fastest flights. (Hint: Try including a math calculation inside of your function.)
 
 ```{r}
 names(flights
@@ -309,8 +308,7 @@ flights %>% arrange(desc(distance/air_time)) %>%
 
 ```
 
-### 3.
-Was there a flight on every day of 2013?
+### 3.Was there a flight on every day of 2013?
 ```{r}
 # removing cancelled flights, and checking distinct days and month combinations still appearing.
 
@@ -320,8 +318,7 @@ flights %>% filter(!is.na(dep_time)) %>% distinct(month, day)
 
 ```
 
-###4.
-Which flights traveled the farthest distance? Which traveled the least distance?
+###4.Which flights traveled the farthest distance? Which traveled the least distance?
 ```{r}
 
 #Unique origin/destination combination == max distance
@@ -337,8 +334,7 @@ airports %>% filter(faa == "LGA" | faa == "EWR")
 ```
 
 
-###5.
-Does it matter what order you used filter() and arrange() if you’re using both? Why/why not? Think about the results and how much work the functions would have to do.
+###5.Does it matter what order you used filter() and arrange() if you’re using both? Why/why not? Think about the results and how much work the functions would have to do.
 ```{r}
 #If you filter first you reduced the data size of the data first, and then arrange it.
 
@@ -346,4 +342,72 @@ Does it matter what order you used filter() and arrange() if you’re using both
 
 
 ```
+
+## Exercises pt. 5
+### 1.Compare dep_time, sched_dep_time, and dep_delay. How would you expect those three numbers to be related?
+```{r}
+flights %>% select(dep_time, sched_dep_time, dep_delay)
+
+# actual departure time - schedule = delay
+# conversion is complicated
+
+flights %>% separate(dep_time, into = c("dep_time_hour", "dep_time_min"), remove = FALSE, sep = -2)
+
+```
+
+### 2.Brainstorm as many ways as possible to select dep_time, dep_delay, arr_time, and arr_delay from flights.
+
+```{r}
+flights %>% select(dep_time, dep_delay, arr_time, arr_delay)
+
+flights %>% select(matches("^dep"), matches("^arr"))
+
+
+vector <- c("dep_time", "dep_delay", "arr_time", "arr_delay")
+flights %>% select( all_of(vector))
+
+```
+### 3.What happens if you specify the name of the same variable multiple times in a select() call?
+
+```{r}
+flights %>% select(year,month, year)
+
+#Duplicates are ignored
+```
+
+### 4.Does the result of running the following code surprise you? 
+How do the select helpers deal with upper and lower case by default?
+How can you change that default?
+```{r}
+flights %>% select(contains("TIME"))
+flights %>% select(contains("TIME", ignore.case = FALSE))
+
+flights %>% select(matches("TIME"))
+flights %>% select(matches("TIME", ignore.case = FALSE))
+
+#Defaulst is ignore.case = TRUE
+```
+
+### 5.Rename air_time to air_time_min to indicate units of measurement and move it to the beginning of the data frame.
+```{r}
+flights2 <- flights %>% select(air_time_min = air_time, everything())
+flights2
+
+```
+
+### 6.Why doesn’t the following work, and what does the error mean?
+flights %>%
+select(tailnum) %>%
+arrange(arr_delay)
+```{r}
+# flights %>%
+# select(tailnum) %>%
+# arrange(arr_delay)
+
+#When you run
+#  flights %>% select(tailnum)
+#you end up with only the tailnum variable, hence it's no longer possible to arrange by the arr_delay variable.
+
+```
+
 
