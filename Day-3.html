@@ -507,7 +507,7 @@ monte_carlo &lt;- function(N) {
 
 system.time(res &lt;- monte_carlo(N))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.401   0.048   0.468</code></pre>
+##   0.390   0.069   0.464</code></pre>
 <pre class="r"><code>res</code></pre>
 <pre><code>## [1] 0.33288</code></pre>
 <pre class="r"><code># x and y outside
@@ -528,7 +528,7 @@ hits &lt;- 0
 }
 system.time(res &lt;- monte_carlo2(N))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.011   0.001   0.012</code></pre>
+##   0.011   0.000   0.012</code></pre>
 <pre class="r"><code>res</code></pre>
 <pre><code>## [1] 0.332765</code></pre>
 <pre class="r"><code># take 3
@@ -575,7 +575,7 @@ system.time({
   p &lt;- count / N
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.100   0.015   0.115</code></pre>
+##   0.101   0.020   0.121</code></pre>
 <pre class="r"><code>p</code></pre>
 <pre><code>## [1] 0.88454</code></pre>
 <pre class="r"><code># v 2
@@ -591,7 +591,7 @@ system.time({
   p &lt;- sum(count(p[&quot;x&quot;]))/N
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.005   0.000   0.005</code></pre>
+##   0.005   0.000   0.006</code></pre>
 <pre class="r"><code>p</code></pre>
 <pre><code>## [1] 0.88454</code></pre>
 <pre class="r"><code>rm(p,N)
@@ -623,14 +623,14 @@ system.time({
   }
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.233   0.004   0.236</code></pre>
+##   0.230   0.003   0.233</code></pre>
 <pre class="r"><code># Florian&#39;s solution 
 
 system.time({
     mat_big2 &lt;- sweep(mat_big, 2, 10 * last_row, &quot;*&quot;)
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.001   0.000   0.001</code></pre>
+##   0.002   0.000   0.001</code></pre>
 </div>
 <div id="pt.-3" class="section level4">
 <h4>pt. 3</h4>

@@ -32,6 +32,7 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
@@ -220,6 +221,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -325,6 +329,14 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Day 5</h1>
@@ -334,7 +346,178 @@ $(document).ready(function () {
 </div>
 
 
-<p>Veryyyy empty.</p>
+<div id="get-the-data" class="section level4">
+<h4>Get the Data</h4>
+<pre class="r"><code>require(tidyverse)
+
+# Read in with tidytuesdayR package 
+# Install from CRAN via: install.packages(&quot;tidytuesdayR&quot;)
+# This loads the readme and all the datasets for the week of interest
+
+# Either ISO-8601 date or year/week works!
+
+#### Load</code></pre>
+<pre><code>## --- Compiling #TidyTuesday Information for 2023-06-20 ----</code></pre>
+<pre><code>## --- There are 3 files available ---</code></pre>
+<pre><code>## --- Starting Download ---</code></pre>
+<pre><code>## 
+##  Downloading file 1 of 3: `ufo_sightings.csv`
+##  Downloading file 2 of 3: `places.csv`
+##  Downloading file 3 of 3: `day_parts_map.csv`</code></pre>
+<pre><code>## --- Download complete ---</code></pre>
+<pre><code>## --- Compiling #TidyTuesday Information for 2023-06-20 ----</code></pre>
+<pre><code>## --- There are 3 files available ---</code></pre>
+<pre><code>## --- Starting Download ---</code></pre>
+<pre><code>## 
+##  Downloading file 1 of 3: `ufo_sightings.csv`
+##  Downloading file 2 of 3: `places.csv`
+##  Downloading file 3 of 3: `day_parts_map.csv`</code></pre>
+<pre><code>## --- Download complete ---</code></pre>
+<pre><code>## Rows: 96429 Columns: 12
+## ── Column specification ──────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (7): city, state, country_code, shape, reported_duration, summary, day_...
+## dbl  (1): duration_seconds
+## lgl  (1): has_images
+## dttm (2): reported_date_time, reported_date_time_utc
+## date (1): posted_date
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 14417 Columns: 10
+## ── Column specification ──────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (6): city, alternate_city_names, state, country, country_code, timezone
+## dbl (4): latitude, longitude, population, elevation_m
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 26409 Columns: 12
+## ── Column specification ──────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl  (2): rounded_lat, rounded_long
+## date (1): rounded_date
+## time (9): astronomical_twilight_begin, nautical_twilight_begin, civil_twilig...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div id="using-the-clean-up-available" class="section level4">
+<h4>Using the clean up available</h4>
+<pre><code>## here() starts at /Users/au339660/Library/CloudStorage/OneDrive-Aarhusuniversitet/Dokumenter/Gemt fra undervisning/Advanced R/rmarkdown-website-template</code></pre>
+</div>
+<div id="now-what" class="section level3">
+<h3>Now what</h3>
+<pre class="r"><code>#unlike on the website there this data set says nobody have images.
+
+ufo_sightings %&gt;% 
+  ggplot(aes(has_images, fill = has_images)) +
+  geom_bar() + 
+  theme_bw() +
+  labs(title = &quot;Images of the sighting&quot;,
+       subtitle = &quot;unlike on the website there this data set says nobody have images&quot;)</code></pre>
+<p><img src="Day-5_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># simplifying day times, because who knows what nautical v astronomical v civil dusk/dawn is  
+ufo_sightings2 &lt;- ufo_sightings %&gt;% 
+  separate(day_part,into = c(&quot;remove&quot;,
+                             &quot;day_part&quot;), 
+           sep = &quot; &quot;, 
+           fill = &quot;left&quot;) %&gt;% 
+  select(-remove) %&gt;% 
+  mutate(day_part = factor(day_part, 
+                              levels= c(&quot;dawn&quot;, &quot;morning&quot;, &quot;afternoon&quot;, &quot;dusk&quot;, &quot;night&quot;),
+                              labels= c(&quot;Dawn&quot;, &quot;Morning&quot;, &quot;Afternoon&quot;, &quot;Dusk&quot;, &quot;Night&quot;))
+  )
+
+#UFO sightings across part of day
+ ufo_sightings2 %&gt;% ggplot(aes(day_part, fill = day_part)) +
+  geom_bar(show.legend = F) +
+  theme_bw(base_size = 16) +
+   labs(title = &quot;UFO sightings across part of day&quot;,
+        y = &quot;Count&quot;,
+        x = &quot;Part of day&quot;)</code></pre>
+<p><img src="Day-5_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code> #Extracting year of the report
+ ufo_sightings2&lt;- ufo_sightings2 %&gt;% mutate(year = str_extract(reported_date_time_utc,&quot;^\\d{4}&quot;))
+ 
+ # UFO sightings across the years
+ 
+ ufo_sightings2 %&gt;% ggplot(aes(year)) +
+   geom_bar() +
+   theme_bw(base_size = 16) +
+   theme(axis.text.x = element_text(angle = 90)) +
+   scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+   labs(title = &quot;UFO sightings across the years&quot;,
+        subtitle = &quot;All years&quot;,
+        y = &quot;Count&quot;,
+        x = &quot;Year&quot;)</code></pre>
+<p><img src="Day-5_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<pre class="r"><code># UFO sightings across the years
+ 
+ ufo_sightings2 %&gt;% 
+   filter(year &gt;1990) %&gt;% 
+   ggplot(aes(year)) +
+   geom_bar() +
+   theme_bw(base_size = 16) +
+   theme(axis.text.x = element_text(angle = 90)) +
+   scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+   labs(title = &quot;UFO sightings across the years&quot;,
+        subtitle = &quot;since 1990&quot;,
+        y = &quot;Count&quot;,
+        x = &quot;Year&quot;)</code></pre>
+<p><img src="Day-5_files/figure-html/unnamed-chunk-4-4.png" width="672" /></p>
+<pre class="r"><code>#Duration of sightings in seconds through out the day
+ 
+ufo_sightings2 %&gt;%  ggplot(aes(day_part, duration_seconds , fill = day_part)) + 
+  geom_point(show.legend = F) + 
+  geom_boxplot(show.legend = F) +
+  scale_y_log10() +
+  labs(title = &quot;Duration of sightings in seconds throughout the day&quot;,
+       y = &quot;Duration in seconds \nlog scale&quot;,
+       x = &quot;Part of day&quot;) + 
+  theme_bw(base_size = 16)</code></pre>
+<pre><code>## Warning: Transformation introduced infinite values in continuous
+## y-axis
+## Transformation introduced infinite values in continuous
+## y-axis</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite values
+## (`stat_boxplot()`).</code></pre>
+<p><img src="Day-5_files/figure-html/unnamed-chunk-4-5.png" width="672" /></p>
+<pre class="r"><code>ufo_sightings2 %&gt;% filter(country_code == &quot;DK&quot;) %&gt;% view()
+dk &lt;- ufo_sightings2 %&gt;% filter(country_code == &quot;DK&quot;) %&gt;% 
+  mutate(muni = case_when(state == &quot;South Denmark&quot; ~ &quot;syddanmark&quot;,
+                          state == &quot;Capital Region&quot; ~ &quot;hovedstaden&quot;,
+                          state == &quot;North Denmark&quot; ~ &quot;nordjylland&quot;,
+                          state == &quot;Zealand&quot; ~ &quot;sjaelland&quot;,
+                          state == &quot;Central Jutland&quot; ~ &quot;midtjylland&quot;
+                          ))
+
+
+# UFO sightings in by region Denmark
+dk %&gt;% group_by(muni) %&gt;% 
+  summarize(n = n()) %&gt;% 
+plotDK::plotDK(., 
+               id = &quot;muni&quot;,
+               plotlevel = &quot;region&quot;,
+               value = &quot;n&quot;,
+               show_missing = T) +
+  binned_scale(aesthetics = &quot;fill&quot;,
+               scale_name = &quot;stepsn&quot;, 
+               na.value = &quot;#c9cccf&quot;,
+               palette = function(x) rev(c(&quot;#D53E4F&quot;,
+                                           &quot;#FC8D59&quot;,
+                                           &quot;#FEE08B&quot;,
+                                           &quot;#99D594&quot;,
+                                           &quot;#3288BD&quot;)),
+               breaks = c(1,2, 4,6, 8),
+               limits = c(0,8),
+               show.limits = TRUE, 
+               guide = &quot;legend&quot;,
+               name = &quot;Count&quot;
+    ) +
+  labs(title = &quot;UFO sightings in by region Denmark&quot;,)</code></pre>
+<p><img src="Day-5_files/figure-html/unnamed-chunk-4-6.png" width="672" /></p>
+</div>
 
 
 
@@ -369,6 +552,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
