@@ -507,7 +507,7 @@ monte_carlo &lt;- function(N) {
 
 system.time(res &lt;- monte_carlo(N))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.386   0.063   0.452</code></pre>
+##   0.391   0.054   0.450</code></pre>
 <pre class="r"><code>res</code></pre>
 <pre><code>## [1] 0.33288</code></pre>
 <pre class="r"><code># x and y outside
@@ -545,7 +545,7 @@ output &lt;- output %&gt;% mutate(below = ifelse(why &lt; ex^2, 1L, 0L))
 }
 system.time(res &lt;- monte_carlo3(N))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.007   0.001   0.008</code></pre>
+##   0.007   0.000   0.007</code></pre>
 <pre class="r"><code>res</code></pre>
 <pre><code>## [1] 0.33413</code></pre>
 <pre class="r"><code># Florian&#39;s solution
@@ -575,7 +575,7 @@ system.time({
   p &lt;- count / N
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.098   0.022   0.120</code></pre>
+##   0.100   0.013   0.114</code></pre>
 <pre class="r"><code>p</code></pre>
 <pre><code>## [1] 0.88454</code></pre>
 <pre class="r"><code># v 2
@@ -623,7 +623,7 @@ system.time({
   }
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.229   0.003   0.233</code></pre>
+##   0.236   0.004   0.241</code></pre>
 <pre class="r"><code># Florian&#39;s solution 
 
 system.time({
