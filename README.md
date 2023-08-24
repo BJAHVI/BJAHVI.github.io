@@ -1,4 +1,7 @@
 # Make your website with R Markdown in minutes
+This is the current output
+https://BJAHVI.github.io
+
 
 This is a template (and tutorial) for creating your website with R Markdown in minutes.
 
