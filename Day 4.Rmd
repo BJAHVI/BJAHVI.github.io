@@ -8,4 +8,5 @@ output: html_document
 It was all done in the package project
 
 [The package website from day 4](https://bjahvi.github.io/ADVRminidplyr/index.html)
+<br>
 [The package repo from day 4](https://github.com/BJAHVI/ADVRminidplyr)
