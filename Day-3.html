@@ -339,7 +339,8 @@ $(document).ready(function () {
 <p>###1.Which carrier has the worst average delays? Challenge: can you
 disentangle the effects of bad airports vs. bad carriers? Why/why
 not?</p>
-<pre class="r"><code>require(nycflights13)
+<pre class="r"><code>require(tidyverse)
+require(nycflights13)
 
 flights %&gt;% group_by(carrier) %&gt;% 
   summarize(avg_del_carrier = mean(arr_delay, na.rm = TRUE)) %&gt;%
@@ -476,8 +477,181 @@ friends?</p>
 </div>
 <div id="exercises-pt.-2" class="section level2">
 <h2>Exercises pt. 2</h2>
-<div id="section" class="section level3">
-<h3></h3>
+<div id="montecarlo-code" class="section level3">
+<h3>1. montecarlo code</h3>
+<pre class="r"><code>#original
+
+# Using this N
+N &lt;- 2e5
+
+#fixing rng
+
+set.seed(1)
+
+
+monte_carlo &lt;- function(N) {
+  
+  hits &lt;- 0
+  
+  for (i in seq_len(N)) {
+    x &lt;- runif(1)
+    y &lt;- runif(1)
+    if (y &lt; x^2) {
+      hits &lt;- hits + 1
+    }
+  }
+  
+  hits / N
+}
+
+
+system.time(res &lt;- monte_carlo(N))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.386   0.063   0.452</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>## [1] 0.33288</code></pre>
+<pre class="r"><code># x and y outside
+monte_carlo2 &lt;- function(N) {
+  
+hits &lt;- 0
+    x = runif(N)
+    y = runif(N)
+    
+  
+  for (i in seq_len(N)) {
+    if (y[[i]] &lt; x[[i]]^2) {
+      hits &lt;- hits+1
+    }
+  }
+  
+  sum(unlist(hits)) / N
+}
+system.time(res &lt;- monte_carlo2(N))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.011   0.000   0.011</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>## [1] 0.332765</code></pre>
+<pre class="r"><code># take 3
+monte_carlo3 &lt;- function(N) {
+  
+output &lt;- tibble(
+    ex = runif(N),
+    why = runif(N))
+    
+output &lt;- output %&gt;% mutate(below = ifelse(why &lt; ex^2, 1L, 0L))
+  
+  
+  sum(output[[&quot;below&quot;]])/N
+}
+system.time(res &lt;- monte_carlo3(N))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.007   0.001   0.008</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>## [1] 0.33413</code></pre>
+<pre class="r"><code># Florian&#39;s solution
+
+monte_carlo4 &lt;- function(N) {
+    mean(runif(N) &lt; runif(N)^2)
+}
+system.time(monte_carlo4(N))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.003   0.000   0.003</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>## [1] 0.33413</code></pre>
+</div>
+<div id="ex-5.7" class="section level3">
+<h3>ex 5.7</h3>
+<pre class="r"><code># Start
+system.time({
+  set.seed(1)
+  N &lt;- 1e5
+  x &lt;- 0
+  count &lt;- 0
+  for (i in seq_len(N)) {
+    y &lt;- rnorm(1)
+    x &lt;- x + y
+    if (x &lt; 0) count &lt;- count + 1
+  }
+  p &lt;- count / N
+})</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.098   0.022   0.120</code></pre>
+<pre class="r"><code>p</code></pre>
+<pre><code>## [1] 0.88454</code></pre>
+<pre class="r"><code># v 2
+rm(p,  x, count)
+
+system.time({
+  set.seed(1)
+  N &lt;- 1e5
+  p &lt;- tibble(y = rnorm(N)) %&gt;% 
+    mutate(x = cumsum(y)) %&gt;% 
+  filter(x &lt; 0 )
+  
+  p &lt;- sum(count(p[&quot;x&quot;]))/N
+})</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.006   0.000   0.005</code></pre>
+<pre class="r"><code>p</code></pre>
+<pre><code>## [1] 0.88454</code></pre>
+<pre class="r"><code>rm(p,N)
+# Florian&#39;s solution
+
+system.time({
+    set.seed(1)
+    N &lt;- 1e5
+    y &lt;- rnorm(N)
+    x &lt;- cumsum(y)
+    p &lt;- mean(x &lt; 0)
+})</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.003   0.000   0.003</code></pre>
+<pre class="r"><code>p</code></pre>
+<pre><code>## [1] 0.88454</code></pre>
+<div id="pt-2" class="section level4">
+<h4>pt 2</h4>
+<pre class="r"><code>mat &lt;- as.matrix(mtcars)
+ind &lt;- seq_len(nrow(mat))
+mat_big &lt;- mat[rep(ind, 1000), ]  ## 1000 times bigger dataset
+last_row &lt;- mat_big[nrow(mat_big), ]</code></pre>
+<pre class="r"><code>#Original
+system.time({
+  for (j in 1:ncol(mat_big)) {
+    for (i in 1:nrow(mat_big)) {
+      mat_big[i, j] &lt;- 10 * mat_big[i, j] * last_row[j]
+    }
+  }
+})</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.229   0.003   0.233</code></pre>
+<pre class="r"><code># Florian&#39;s solution 
+
+system.time({
+    mat_big2 &lt;- sweep(mat_big, 2, 10 * last_row, &quot;*&quot;)
+})</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.001   0.000   0.002</code></pre>
+</div>
+<div id="pt.-3" class="section level4">
+<h4>pt. 3</h4>
+<pre class="r"><code>#Start
+M &lt;- 50
+set.seed(1)
+step1 &lt;- runif(M)
+set.seed(1)
+A &lt;- rnorm(M)
+N &lt;- 1e4
+
+tau &lt;- matrix(0, N + 1, M)
+tau[1, ] &lt;- A
+
+for (i in 2:nrow(tau)) {
+for (j in 1:M) {
+  
+    tau[i, j] &lt;- tau[i - 1, j] + step1[j] * 1.0025^(i - 2)
+  }
+} </code></pre>
+</div>
 </div>
 </div>
 
