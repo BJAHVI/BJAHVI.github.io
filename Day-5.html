@@ -406,8 +406,8 @@ $(document).ready(function () {
 <h4>Using the clean up available</h4>
 <pre><code>## here() starts at /Users/au339660/Library/CloudStorage/OneDrive-Aarhusuniversitet/Dokumenter/Gemt fra undervisning/Advanced R/rmarkdown-website-template</code></pre>
 </div>
-<div id="now-what" class="section level3">
-<h3>Now what</h3>
+<div id="bhv-contribution" class="section level3">
+<h3>BHV contribution</h3>
 <pre class="r"><code>#unlike on the website there this data set says nobody have images.
 
 ufo_sightings %&gt;% 
@@ -445,8 +445,8 @@ ufo_sightings2 &lt;- ufo_sightings %&gt;%
  ufo_sightings2 %&gt;% ggplot(aes(year)) +
    geom_bar() +
    theme_bw(base_size = 16) +
-   theme(axis.text.x = element_text(angle = 90)) +
-   scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+   scale_x_discrete(breaks = seq(1900, 2023, 10)) +
+   # scale_x_discrete(guide = guide_axis(n.dodge=3)) +
    labs(title = &quot;UFO sightings across the years&quot;,
         subtitle = &quot;All years&quot;,
         y = &quot;Count&quot;,
@@ -459,8 +459,7 @@ ufo_sightings2 &lt;- ufo_sightings %&gt;%
    ggplot(aes(year)) +
    geom_bar() +
    theme_bw(base_size = 16) +
-   theme(axis.text.x = element_text(angle = 90)) +
-   scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+   scale_x_discrete(breaks = seq(1990, 2023, 5)) +
    labs(title = &quot;UFO sightings across the years&quot;,
         subtitle = &quot;since 1990&quot;,
         y = &quot;Count&quot;,
@@ -483,7 +482,7 @@ ufo_sightings2 %&gt;%  ggplot(aes(day_part, duration_seconds , fill = day_part))
 <pre><code>## Warning: Removed 2 rows containing non-finite values
 ## (`stat_boxplot()`).</code></pre>
 <p><img src="Day-5_files/figure-html/unnamed-chunk-4-5.png" width="672" /></p>
-<pre class="r"><code>ufo_sightings2 %&gt;% filter(country_code == &quot;DK&quot;) %&gt;% view()
+<pre class="r"><code># ufo_sightings2 %&gt;% filter(country_code == &quot;DK&quot;) %&gt;% view()
 dk &lt;- ufo_sightings2 %&gt;% filter(country_code == &quot;DK&quot;) %&gt;% 
   mutate(muni = case_when(state == &quot;South Denmark&quot; ~ &quot;syddanmark&quot;,
                           state == &quot;Capital Region&quot; ~ &quot;hovedstaden&quot;,
@@ -515,8 +514,28 @@ plotDK::plotDK(.,
                guide = &quot;legend&quot;,
                name = &quot;Count&quot;
     ) +
-  labs(title = &quot;UFO sightings in by region Denmark&quot;,)</code></pre>
+  labs(title = &quot;UFO sightings in Denmark by region&quot;)</code></pre>
 <p><img src="Day-5_files/figure-html/unnamed-chunk-4-6.png" width="672" /></p>
+<pre class="r"><code>counts &lt;- ufo_sightings2 %&gt;% group_by(year) %&gt;% summarize(n = n())
+counts</code></pre>
+<pre><code>## # A tibble: 92 × 2
+##    year      n
+##    &lt;chr&gt; &lt;int&gt;
+##  1 1925      1
+##  2 1928      1
+##  3 1929      1
+##  4 1930      2
+##  5 1931      2
+##  6 1934      1
+##  7 1937      1
+##  8 1939      2
+##  9 1940      1
+## 10 1941      2
+## # ℹ 82 more rows</code></pre>
+<pre class="r"><code>sum(counts$n
+    )</code></pre>
+<pre><code>## [1] 96429</code></pre>
+<pre class="r"><code># ufo_sightings2 %&gt;% filter(summary %in% str_detect(summary, &quot;whisper&quot;))</code></pre>
 </div>
 
 

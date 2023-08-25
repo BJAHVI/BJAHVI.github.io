@@ -113,7 +113,7 @@ day_parts_map <- readRDS(day_parts_path)
 
 ```
 
-### Now what
+### BHV contribution
 ```{r}
 #unlike on the website there this data set says nobody have images.
 
@@ -152,8 +152,8 @@ ufo_sightings2 <- ufo_sightings %>%
  ufo_sightings2 %>% ggplot(aes(year)) +
    geom_bar() +
    theme_bw(base_size = 16) +
-   theme(axis.text.x = element_text(angle = 90)) +
-   scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+   scale_x_discrete(breaks = seq(1900, 2023, 10)) +
+   # scale_x_discrete(guide = guide_axis(n.dodge=3)) +
    labs(title = "UFO sightings across the years",
         subtitle = "All years",
         y = "Count",
@@ -166,8 +166,7 @@ ufo_sightings2 <- ufo_sightings %>%
    ggplot(aes(year)) +
    geom_bar() +
    theme_bw(base_size = 16) +
-   theme(axis.text.x = element_text(angle = 90)) +
-   scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+   scale_x_discrete(breaks = seq(1990, 2023, 5)) +
    labs(title = "UFO sightings across the years",
         subtitle = "since 1990",
         y = "Count",
@@ -185,7 +184,7 @@ ufo_sightings2 %>%  ggplot(aes(day_part, duration_seconds , fill = day_part)) +
        x = "Part of day") + 
   theme_bw(base_size = 16)
 
-ufo_sightings2 %>% filter(country_code == "DK") %>% view()
+# ufo_sightings2 %>% filter(country_code == "DK") %>% view()
 dk <- ufo_sightings2 %>% filter(country_code == "DK") %>% 
   mutate(muni = case_when(state == "South Denmark" ~ "syddanmark",
                           state == "Capital Region" ~ "hovedstaden",
@@ -217,7 +216,14 @@ plotDK::plotDK(.,
                guide = "legend",
                name = "Count"
     ) +
-  labs(title = "UFO sightings in by region Denmark",)
+  labs(title = "UFO sightings in Denmark by region")
  
+counts <- ufo_sightings2 %>% group_by(year) %>% summarize(n = n())
+counts
+sum(counts$n
+    )
+# ufo_sightings2 %>% filter(summary %in% str_detect(summary, "whisper"))
+
+
 ```
 
